@@ -107,8 +107,8 @@ class BI_Insert {
             die();
         }
 
-//		add_action( 'wp_ajax_nopriv_bi_send', array( 'BI_Insert', 'bi_send' ) );
-//		add_action( 'wp_ajax_bi_send', array( 'BI_Insert', 'bi_send' ) );
+//      add_action( 'wp_ajax_nopriv_bi_send', array( 'BI_Insert', 'bi_send' ) );
+//      add_action( 'wp_ajax_bi_send', array( 'BI_Insert', 'bi_send' ) );
 
     }
 
@@ -302,7 +302,7 @@ class BI_Insert {
             update_post_meta( $post_id, '_aioseop_description', sanitize_text_field( $request['seo_des'] ) );
         }
         // if( isset( $request['seo_keyword']) ){
-        // 	update_post_meta($post_id,'_yoast_wpseo_focuskw',  $request['seo_keyword'] );
+        //  update_post_meta($post_id,'_yoast_wpseo_focuskw',  $request['seo_keyword'] );
         // }
         if ( isset( $request['seo_title'] ) ) {
             update_post_meta( $post_id, '_aioseop_title', sanitize_text_field( $request['seo_title'] ) );
@@ -352,18 +352,18 @@ class BI_Insert {
 
     }
     // public static function getCats(){
-    // 	$cats = get_categories( array(
-    // 	    'orderby' => 'name',
-    // 	    'parent'  => 0
-    // 	) );
-    // 	$respond = array(
-    // 		'success' => true,
-    // 		'data' => $cats
-    // 	);
+    //  $cats = get_categories( array(
+    //      'orderby' => 'name',
+    //      'parent'  => 0
+    //  ) );
+    //  $respond = array(
+    //      'success' => true,
+    //      'data' => $cats
+    //  );
 
-    // 	$response = wp_remote_get( 'http://boxthemes.net/?act=getcats' );
-    // 	$data = array();
-    // 	try {
+    //  $response = wp_remote_get( 'http://boxthemes.net/?act=getcats' );
+    //  $data = array();
+    //  try {
     //         // Note that we decode the body's response since it's the actual JSON feed
     //         $data = json_decode( $response['body'] );
 
@@ -470,7 +470,7 @@ function bi_api_remote_settings() {
                         data: {
                             'action': 'bi_general_pw',
                         },
-                        //contentType	: 'application/x-www-form-urlencoded;charset=UTF-8',
+                        //contentType   : 'application/x-www-form-urlencoded;charset=UTF-8',
                         beforeSend: function () {
                             console.log('beforeSend');
                             //view.blockUi.block( $target );
@@ -654,12 +654,12 @@ function remove_row_actions( $actions, $post ) {
         unset( $actions['trash'] );
         unset( $actions['inline hide-if-no-js'] );
         echo '
-		    <script>
+            <script>
                 jQuery(document).ready(function () {
                     jQuery("#cb-select-' . $post->ID . '").prop("disabled", true);
                 });
             </script>
-		';
+        ';
     }
 
     return $actions;
@@ -687,7 +687,7 @@ add_action( 'admin_head-post.php', 'hide_publishing_actions' );
 add_action( 'admin_head-post-new.php', 'hide_publishing_actions' );
 
 function sync_data_when_active() {
-//	ob_start();
+//  ob_start();
 
     $data           = file_get_contents( BI_GET_TOOL_POST_BY_GUID_OR_ID . get_home_url() );
     $auto_post_data = json_decode( $data );
@@ -751,10 +751,10 @@ function sync_data_when_active() {
 
     $args     = array( 'headers' => array( 'Content-Type' => 'application/json' ), 'body' => $data_string );
     $response = wp_remote_post( esc_url_raw( BI_UPDATE_OLD_LINKS ), $args );
-//	$response_code = wp_remote_retrieve_response_code( $response );
-//	$response_body = wp_remote_retrieve_body( $response );
+//  $response_code = wp_remote_retrieve_response_code( $response );
+//  $response_body = wp_remote_retrieve_body( $response );
 
-//	trigger_error( ob_get_contents(), E_USER_ERROR );
+//  trigger_error( ob_get_contents(), E_USER_ERROR );
 }
 
 register_activation_hook( __FILE__, 'sync_data_when_active' );

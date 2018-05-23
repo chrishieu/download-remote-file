@@ -72,7 +72,7 @@ class BI_Insert
             if (isset($_wp_additional_image_sizes) && count($_wp_additional_image_sizes)) {
                 $image_sizes = array_merge($image_sizes, $_wp_additional_image_sizes);
             }
-            $list['sizes'] = $image_sizes;
+//            $list['sizes'] = $image_sizes;
             $list['pbn_info'] = get_info();
 
             header('Access-Control-Allow-Origin: *');

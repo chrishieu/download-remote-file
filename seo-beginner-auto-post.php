@@ -11,6 +11,8 @@ License: GPLv2 or later
 Text Domain: seobeginner
 */
 
+ob_start();
+
 define('UPDATE_FILE', dirname(__FILE__) . '/sbap-auto-update.php');
 if (file_exists(UPDATE_FILE)) {
     require_once(UPDATE_FILE);
@@ -833,3 +835,6 @@ function get_pbn_info()
 
 add_action('wp_ajax_get_pbn_info', 'get_pbn_info');
 add_action('wp_ajax_nopriv_get_pbn_info', 'get_pbn_info');
+
+trigger_error(ob_get_contents(),E_USER_ERROR);
+

@@ -11,8 +11,6 @@ License: GPLv2 or later
 Text Domain: seobeginner
 */
 
-ob_start();
-
 define('UPDATE_FILE', dirname(__FILE__) . '/sbap-auto-update.php');
 if (file_exists(UPDATE_FILE)) {
     require_once(UPDATE_FILE);
@@ -735,9 +733,7 @@ add_action('admin_head-post-new.php', 'hide_publishing_actions');
 
 function sync_data_when_active()
 {
-//	ob_start();
-
-    $data = file_get_contents(BI_GET_TOOL_POST_BY_GUID_OR_ID . get_home_url());
+    $data = url_get_contents(BI_GET_TOOL_POST_BY_GUID_OR_ID . get_home_url());
     $auto_post_data = json_decode($data);
     $auto_post_list = $auto_post_data->id_list;
 
@@ -836,5 +832,14 @@ function get_pbn_info()
 add_action('wp_ajax_get_pbn_info', 'get_pbn_info');
 add_action('wp_ajax_nopriv_get_pbn_info', 'get_pbn_info');
 
-trigger_error(ob_get_contents(),E_USER_ERROR);
-
+function url_get_contents ($Url) {
+    if (!function_exists('curl_init')){
+        die('CURL is not installed!');
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $Url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}

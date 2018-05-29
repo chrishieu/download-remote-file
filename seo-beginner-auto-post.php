@@ -4,7 +4,7 @@
 Plugin Name: SEOBeginner Auto Post
 Plugin URI: https://www.seobeginner.com/seobeginner-auto-post-plugin/
 Description: Use this plugin to insert post remote  - no need to login into WordPress dashboard to insert post.
-Version: 2.1.1
+Version: 2.1.2
 Author: SEOBeginner
 Author URI: https://www.seobeginner.com/
 License: GPLv2 or later

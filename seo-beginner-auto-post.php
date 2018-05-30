@@ -191,6 +191,7 @@ class BI_Insert
         $code = isset($request['code']) ? sanitize_text_field($request['code']) : '';
 
         if ($data['act'] == 'delete') {
+            self::check_post_exist($data['ID']);
             wp_delete_post($data['ID'], true);
             $respond = array(
                 'success' => true,
@@ -224,13 +225,14 @@ class BI_Insert
             echo json_encode($check);
         }
 
-        if ($_REQUEST['ID'] == '') {
+        if ($data['ID'] == '') {
             $post = wp_insert_post($data);
             update_post_meta($post, BI_KEY_TOOL_AUTO_POST, 1);
             $respond['action'] = 'insert';
             $respond['msg'] = __("Insert Post Successfully.", 'boxtheme');
             $respond['pbn_info'] = get_info();
         } else {
+            self::check_post_exist($data['ID']);
             wp_update_post($data);
 
             global $wpdb;
@@ -413,6 +415,19 @@ class BI_Insert
     //    wp_send_json(array('success' => true, 'data' => $data) );
 
     // }
+
+    private function check_post_exist($id)
+    {
+        $query_post = get_post($id);
+        if (is_null($query_post)) {
+            $data = array(
+                'success' => false,
+                'msg' => __('Post ' . $id . ' is not exist.'),
+            );
+            echo json_encode($data);
+            die();
+        }
+    }
 }
 
 add_action('init', array('BI_Insert', 'init'));
@@ -672,11 +687,12 @@ function bi_insert_img_from_url($url, $parent_post_id, $post_title = '')
     }
 }
 
-function set_own_post_thumbnail( $post, $thumbnail_id ) {
-    $post         = get_post( $post );
-    $thumbnail_id = absint( $thumbnail_id );
-    if ( $post && $thumbnail_id && get_post( $thumbnail_id ) ) {
-        return update_post_meta( $post->ID, '_thumbnail_id', $thumbnail_id );
+function set_own_post_thumbnail($post, $thumbnail_id)
+{
+    $post = get_post($post);
+    $thumbnail_id = absint($thumbnail_id);
+    if ($post && $thumbnail_id && get_post($thumbnail_id)) {
+        return update_post_meta($post->ID, '_thumbnail_id', $thumbnail_id);
     }
     return false;
 }
@@ -846,8 +862,9 @@ function get_pbn_info()
 add_action('wp_ajax_get_pbn_info', 'get_pbn_info');
 add_action('wp_ajax_nopriv_get_pbn_info', 'get_pbn_info');
 
-function url_get_contents ($Url) {
-    if (!function_exists('curl_init')){
+function url_get_contents($Url)
+{
+    if (!function_exists('curl_init')) {
         die('CURL is not installed!');
     }
     $ch = curl_init();

@@ -230,6 +230,12 @@ class BI_Insert
             $respond['action'] = 'insert';
             $respond['msg'] = __("Insert Post Successfully.", 'boxtheme');
             $respond['pbn_info'] = get_info();
+
+            if (isset($data['featured_img'])) {
+                $url_img = esc_url($data['featured_img']);
+                bi_insert_img_from_url($url_img, $post);
+            }
+            
         } else {
             wp_update_post($data);
 
@@ -262,11 +268,6 @@ class BI_Insert
 
             $respond['data'] = get_post($post);
             update_post_meta($post, '_seobeginner_api_insert', 1);
-
-            if (isset($data['featured_img'])) {
-                $url_img = esc_url($data['featured_img']);
-                bi_insert_img_from_url($url_img, $post);
-            }
 
             self::saveSeoInfo($post, $data);
         }

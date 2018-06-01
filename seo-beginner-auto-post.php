@@ -422,6 +422,8 @@ class BI_Insert
         if (is_null($query_post)) {
             $data = array(
                 'success' => false,
+                'err' => 'post_not_found',
+                'post' => $id,
                 'msg' => __('Post ' . $id . ' is not exist.'),
             );
             echo json_encode($data);

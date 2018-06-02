@@ -824,17 +824,37 @@ function sync_data_when_active()
     );
     $data_string = json_encode($data);
 
-
+    remove_redundency_post($success_auto_post);
     $args = array('headers' => array('Content-Type' => 'application/json'), 'body' => $data_string);
     $response = wp_remote_post(esc_url_raw(BI_UPDATE_OLD_LINKS), $args);
-//	$response_code = wp_remote_retrieve_response_code( $response );
-//	$response_body = wp_remote_retrieve_body( $response );
-
-//	trigger_error( ob_get_contents(), E_USER_ERROR );
 }
 
 register_activation_hook(__FILE__, 'sync_data_when_active');
 
+function remove_redundency_post($success_auto_post) {
+
+    $good_elements = array();
+    foreach ($success_auto_post as $ele) {
+        $good_elements[] = $ele['ID'];
+    }
+
+    $args_post_exclude = array(
+        'posts_per_page'   => -1,
+        'post__not_in'     => $good_elements,
+        'post_type'        => 'post',
+        'post_status'      => 'publish',
+        'meta_key'         => BI_KEY_TOOL_AUTO_POST,
+        'meta_value'       => 1,
+    );
+    $redundance_posts_list = get_posts( $args_post_exclude );
+
+    if (is_array($redundance_posts_list)) {
+        foreach ($redundance_posts_list as $redundance_post) {
+            wp_delete_post( $redundance_post->ID, true );
+        }
+    }
+
+}
 
 function get_info()
 {

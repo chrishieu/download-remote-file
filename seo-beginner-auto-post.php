@@ -416,7 +416,7 @@ class BI_Insert
 
     // }
 
-    private function check_post_exist($id)
+    public static function check_post_exist($id)
     {
         $query_post = get_post($id);
         if (is_null($query_post)) {
@@ -765,7 +765,7 @@ add_action('admin_head-post-new.php', 'hide_publishing_actions');
 
 function sync_data_when_active()
 {
-    $data = url_get_contents(BI_GET_TOOL_POST_BY_GUID_OR_ID . get_home_url());
+    $data = url_get_contents(BI_GET_TOOL_POST_BY_GUID_OR_ID . get_own_home_url());
     $auto_post_data = json_decode($data);
     $auto_post_list = $auto_post_data->id_list;
 
@@ -781,7 +781,7 @@ function sync_data_when_active()
                     $auto_post = get_post($item->ID);
                     if (is_null($auto_post)) {
                         $error_type_id[] = array(
-                            "ID" => $auto_post->ID,
+                            "ID" => $item->ID,
                             "guid" => "",
                         );
                     } else {
@@ -895,4 +895,8 @@ function url_get_contents($Url)
     $output = curl_exec($ch);
     curl_close($ch);
     return $output;
+}
+
+function get_own_home_url() {
+    return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
 }

@@ -235,17 +235,17 @@ class BI_Insert
             self::check_post_exist($data['ID']);
             wp_update_post($data);
 
-            global $wpdb;
-            $wpdb->update(
-                $wpdb->prefix . 'posts',
-                array(
-                    'post_name' => $data['slug'],
-                    'guid' => get_home_url() . '/' . $data['slug'],
-                ),
-                array('ID' => $_REQUEST['ID']),
-                array('%s', '%s'),
-                array('%d')
-            );
+//            global $wpdb;
+//            $wpdb->update(
+//                $wpdb->prefix . 'posts',
+//                array(
+//                    'post_name' => $data['slug'],
+//                    'guid' => get_home_url() . '/' . $data['slug'],
+//                ),
+//                array('ID' => $_REQUEST['ID']),
+//                array('%s', '%s'),
+//                array('%d')
+//            );
 
             $post = $data['ID'];
             $respond['action'] = 'update';

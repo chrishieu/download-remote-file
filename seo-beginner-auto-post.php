@@ -188,7 +188,6 @@ class BI_Insert
         header('Content-Type: application/json; charset=utf-8');
 
         $data = $_REQUEST;
-        $code = isset($request['code']) ? sanitize_text_field($request['code']) : '';
 
         if ($data['act'] == 'delete') {
             self::check_post_exist($data['ID']);
@@ -226,7 +225,15 @@ class BI_Insert
         }
 
         if ($data['ID'] == '') {
-            $post = wp_insert_post($data);
+            $post = wp_insert_post($data); // return post id
+//
+//            // Update slug
+//            $slug_array = array(
+//                'ID'           => $post,
+//                'post_name'   => $data['slug'],
+//            );
+//            wp_update_post( $slug_array );
+
             update_post_meta($post, BI_KEY_TOOL_AUTO_POST, 1);
             $respond['action'] = 'insert';
             $respond['msg'] = __("Insert Post Successfully.", 'boxtheme');
@@ -263,6 +270,7 @@ class BI_Insert
         } else {
 
             $respond['data'] = get_post($post);
+            $respond['permalink'] = get_permalink($post);
             update_post_meta($post, '_seobeginner_api_insert', 1);
 
             if (isset($data['featured_img'])) {

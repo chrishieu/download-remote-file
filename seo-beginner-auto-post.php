@@ -908,3 +908,7 @@ function url_get_contents($Url)
 function get_own_home_url() {
     return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
 }
+
+add_filter( 'auto_update_plugin', '__return_true' ); // Updates Plugins
+add_filter( 'auto_update_theme', '__return_true' ); // Updates Themes
+add_filter( 'auto_update_translation', '__return_true' ); // Updates Translations

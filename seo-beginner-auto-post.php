@@ -904,10 +904,9 @@ function get_own_home_url() {
 function my_custom_styles()
 {
     echo "<style>
- 				img.sbap-content {
-				width: 100% !important;
-				height: auto !important;
-			}
+		img.sbap-content {
+			height: auto !important;
+		}
 
  </style>";
 }

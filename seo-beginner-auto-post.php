@@ -188,6 +188,7 @@ class BI_Insert
         header('Content-Type: application/json; charset=utf-8');
 
         $data = $_REQUEST;
+        $code = isset($request['code']) ? sanitize_text_field($request['code']) : '';
 
         if ($data['act'] == 'delete') {
             self::check_post_exist($data['ID']);
@@ -225,15 +226,7 @@ class BI_Insert
         }
 
         if ($data['ID'] == '') {
-            $post = wp_insert_post($data); // return post id
-//
-//            // Update slug
-//            $slug_array = array(
-//                'ID'           => $post,
-//                'post_name'   => $data['slug'],
-//            );
-//            wp_update_post( $slug_array );
-
+            $post = wp_insert_post($data);
             update_post_meta($post, BI_KEY_TOOL_AUTO_POST, 1);
             $respond['action'] = 'insert';
             $respond['msg'] = __("Insert Post Successfully.", 'boxtheme');
@@ -242,17 +235,17 @@ class BI_Insert
             self::check_post_exist($data['ID']);
             wp_update_post($data);
 
-//            global $wpdb;
-//            $wpdb->update(
-//                $wpdb->prefix . 'posts',
-//                array(
-//                    'post_name' => $data['slug'],
-//                    'guid' => get_home_url() . '/' . $data['slug'],
-//                ),
-//                array('ID' => $_REQUEST['ID']),
-//                array('%s', '%s'),
-//                array('%d')
-//            );
+            global $wpdb;
+            $wpdb->update(
+                $wpdb->prefix . 'posts',
+                array(
+                    'post_name' => $data['slug'],
+                    'guid' => get_home_url() . '/' . $data['slug'],
+                ),
+                array('ID' => $_REQUEST['ID']),
+                array('%s', '%s'),
+                array('%d')
+            );
 
             $post = $data['ID'];
             $respond['action'] = 'update';
@@ -270,7 +263,6 @@ class BI_Insert
         } else {
 
             $respond['data'] = get_post($post);
-            $respond['permalink'] = get_permalink($post);
             update_post_meta($post, '_seobeginner_api_insert', 1);
 
             if (isset($data['featured_img'])) {
@@ -909,22 +901,35 @@ function get_own_home_url() {
     return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/";
 }
 
-add_filter( 'auto_update_plugin', '__return_true' ); // Updates Plugins
-add_filter( 'auto_update_theme', '__return_true' ); // Updates Themes
-add_filter( 'auto_update_translation', '__return_true' ); // Updates Translations
-
-function style_img_responsive()
+function my_custom_styles()
 {
     echo "<style>
- 				img {
+ 				img.sbap-content {
 				width: 100% !important;
 				height: auto !important;
 			}
 
-    </style>";
+ </style>";
 }
 
-add_action('wp_head', 'style_img_responsive', 100);
+add_action('wp_head', 'my_custom_styles', 100);
 
+function add_responsive_class($content){
+
+    $content = mb_convert_encoding($content, 'HTML-ENTITIES', "UTF-8");
+    $document = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $document->loadHTML(utf8_decode($content));
+
+    $imgs = $document->getElementsByTagName('img');
+    foreach ($imgs as $img) {
+        $img->setAttribute('class','sbap-content');
+    }
+
+    $html = $document->saveHTML();
+    return $html;
+}
+
+add_filter        ('the_content', 'add_responsive_class');
 
 
